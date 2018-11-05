@@ -6,17 +6,13 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class Resolve {
-    static final int UNDEFINED = -1;
-    private int vertices[][];
-    static Nodo m[][];
-    static Nodo saida;
-    static int tamMat;
-    static ArrayList ponto = new ArrayList<Integer>();
-    static int limite = 0;
+    static Nodo m[][];//matriz de todos os nodos
+    static Nodo saida;//nodo de saída do labirinto
+    static int tamMat;//tamanho da matriz
+    static ArrayList ponto = new ArrayList<Integer>();//pontos de entrada e saída
+    static int limite = 0;//limites da matriz (tamMat - 1)
 
-    static LinkedList Q = new LinkedList();//ver
-
-    static ArrayList<String> list = new ArrayList();
+    static ArrayList<String> list = new ArrayList();//array list que salva os binários
 
     public void load(String c) throws IOException {
         Path arq = Paths.get("caso" + c + "c");
@@ -89,13 +85,15 @@ public class Resolve {
     }
 
     public static int calcula(){
+
         Nodo entrada = m[(int) ponto.get(0)][(int) ponto.get(1)];
         System.out.println("Entrada: \n linha: " + entrada.linha + "\n coluna:" + entrada.coluna);
+
         saida=m[(int) ponto.get(2)][(int) ponto.get(3)];
         System.out.println("\nSaída: \n linha: " + saida.linha + "\n coluna:" + saida.coluna);
 
         int result = buscaProf(entrada,0);
-        return result;
+        return result;//disntancia
     }
 
     public static int buscaProf(Nodo nodo, int cont){
@@ -106,7 +104,7 @@ public class Resolve {
 
         for (Nodo n:
                 nodo.adjacentes) {
-                if (n.marca == 0) {
+                if (n.marca == 0) {//se nao foi visitado
                     cont++;
                     cont = buscaProf(n, cont);
                 }
@@ -117,41 +115,22 @@ public class Resolve {
         public static void setaAdjacentes(){
             for (int i=0;i<tamMat;i++){
                 for(int j=0;j<tamMat;j++){
-                    try {
-                        if (m[i][j].sup == 0) {
-                            Nodo nodo = m[i][j];
-                            if (i > 0) {
-                                nodo.adjacentes.add(m[i - 1][j]);
-                            }
+
+                    if (m[i][j].sup == 0) {//superior
+                        Nodo nodo = m[i][j];
+                        if (i > 0) {
+                            nodo.adjacentes.add(m[i - 1][j]);
                         }
-                    }catch (Exception e){
-                        //System.out.println("no índice sup" + e);
-                        continue;
                     }
 
-                    try{
                     if(m[i][j].dir==0 && (j<limite))//direita
                         m[i][j].adjacentes.add(m[i][j+1]);
-                    }catch (Exception e){
-                       // System.out.println("no índice dir" + e);
-                        continue;
-                    }
 
-                    try{
                     if(m[i][j].inf==0 && (i<limite))//baixo
                         m[i][j].adjacentes.add(m[i+1][j]);
-                    }catch (Exception e){
-                        //System.out.println("no índice inf" + e);
-                        continue;
-                    }
 
-                    try{
                     if(m[i][j].esq==0 && (j>0))//esquerda
                         m[i][j].adjacentes.add(m[i][j-1]);
-                    }catch (Exception e){
-                        //System.out.println("no índice esq" + e);
-                        continue;
-                    }
                 }
             }
         }
