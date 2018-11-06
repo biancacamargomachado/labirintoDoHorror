@@ -115,10 +115,13 @@ Escola Politécnica - PUCRS
 \begin_layout Abstract
 Este artigo descreve uma solução para o segundo problema proposto na disciplina
  Algoritmos e Estruturas de Dados II no semestre 2018/2, trata-se da determinaçã
-o da altura das ávores binárias que guardam segredos do Greenpeace.
+o da entrada, saída e distância percorrida entre elas no labirinto de Teseu,
+ Ariadina e Minotauro.
+ Este, que teve seu segredo descoberto em uma escavação em Creta.
  Foram disponibilizados 10 casos de teste para resolução do problema: cada
- um contém duas listagens de uma mesma árvore binária, sendo uma delas em
- caminhamento pré-fixado e outra em caminhamento central.
+ um contém uma matriz de hexadecimais, utilizada para representar o labirinto,
+ e dois números que especificam o número de linhas e colunas existentes
+ nesta matriz.
  Após descrever a solução do problema, são apresentados os resultados obtidos
  para os casos de teste, juntamente com seus tempos de execução.
 \end_layout
@@ -129,88 +132,32 @@ Introdução
 
 \begin_layout Standard
 No contexto da disciplina de Algoritmos e Estruturas de Dados II, o enunciado
- do primeiro trabalho proposto pode ser resumido da seguinte forma: depois
- de ter em mãos o documentos secretos do Greenpeace e analisada a forma
- como estes documentos são codificados, constata-se que os documentos são
- armazenados em forma de árvores binárias e que para cada árvore existem
- duas formas de listagem: uma com caminhamento pré-fixado e outra com caminhamen
-to central.
- Tendo as duas listagens referentes a uma mesma árvore dispostas em um arquivo,
- assume-se o objetivo de determinar a altura da árvore descrita nas listagens.
-\end_layout
-
-\begin_layout Standard
-Após observado o problema e seus casos de teste, as primeiras informações
- que podemos listar sobre ele são as seguintes:
-\end_layout
-
-\begin_layout Itemize
-Todo arquivo contém informações sobre uma única árvore;
-\end_layout
-
-\begin_layout Itemize
-As listagens estão dispostas em duas linhas, sendo que a primeira é a com
- caminhamento pré-fixado e a segunda com caminhamento central;
-\end_layout
-
-\begin_layout Itemize
-Não há tamanho máximo e mínimo para as listagens;
-\end_layout
-
-\begin_layout Itemize
-Não é necessário diferenciar letras maiúsculas e minúsculas;
-\end_layout
-
-\begin_layout Itemize
-O conteúdo do arquivo se restringe a conjunto de palavras formados por letras
- e números;
-\end_layout
-
-\begin_layout Itemize
-Cada palavra não se repete na mesma listagem do caso de teste, ou seja,
- é encontrada epenas uma vez na listagem pré-fixada e epenas uma vez na
- listagem infixada;
-\end_layout
-
-\begin_layout Itemize
-Os valores 
-\family typewriter
-null
-\family default
- não fazem parte das listagens.
-\end_layout
-
-\begin_layout Standard
-A fim de ilustrar o problema de maneira prática, utilizaremos uma versão
- simplificada do padrão de listagem encontrada nos documentos secretos do
- Greenpeace: consideraremos que as informações contidas na árvore são letras
- do alfabeto de A a K e segue-se todos os padrões observados e listados
- acima.
- Assim como os valores 
-\family typewriter
-null 
-\family default
-não aparecem na listagem, também não serão mostrados na imagem referente
- à estrutura da árvore, já que não influenciam na altura da mesma.
-\end_layout
-
-\begin_layout Standard
-Abaixo encontram-se exemplos de listagem e a ilustração da árvore que correspond
-e a elas:
-\begin_inset Newline newline
+ do segundo trabalho proposto pode ser resumido da seguinte forma: após
+ descoberto o segredo do labirinto de Teseu, Ariadne e Minotauro, sendo
+ estes descritos por m x n células, sendo m 
+\begin_inset Formula $\geq$
 \end_inset
 
+ 20 e n 
+\begin_inset Formula $\leq$
+\end_inset
 
+ 500.
+ E ainda, cada célula do labirinto contém informações sobre suas conexões
+ com as células conectdas a ela diretamente (acima, abaixo, à esquerda e
+ à direita) e estas informações representavam 4 bits na numeração hexadecimal,
+ em que cada bit corresponde à definição de se há parede superior, direita,
+ inferior e à esquerda da célula.
 \end_layout
 
 \begin_layout Standard
-\align center
-A B D H I E C F G J K
+Um exemplo de valor de célula arbitrária do labirinto é E, que em representação
+ binária é 1110.
+ A partir disto observe a imagem a seguir, que demonstra o que podemos abstrair
+ de informações através deste código.
 \end_layout
 
 \begin_layout Standard
-\align center
-H D I B E A F C J G K
 \begin_inset Float figure
 wide false
 sideways false
@@ -219,8 +166,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../../Documents/PUC/3 - semestre/ALEST2/T1/binaryTree/artigo/imagem1.PNG
-	scale 70
+	filename imagens/img1.PNG
 
 \end_inset
 
@@ -228,10 +174,11 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Árvore correspondente às listagens exibidas acima.
+Demonstração do significado de cada bit para uma célula do labirinto.
 \end_layout
 
 \end_inset
@@ -245,65 +192,42 @@ status open
 \end_layout
 
 \begin_layout Standard
-Segundo [1] , o caminhamento de uma árvore T é uma forma sistemática de
- acessar ou 
-\begin_inset Quotes eld
-\end_inset
-
-visitar
-\begin_inset Quotes erd
-\end_inset
-
- todos os nodos de T.
- Juntamente com este conceito, cabe destacar que caminhamento pré-fixado
- de uma árvore ocorre da seguinte forma: visita a raiz, percorre sub-árvore
- esquerda e percorre sub-árvore direita, nesta ordem.
- Já o caminhamento infixado ou central ocorre da seguinte forma: percorre
- sub-árvore esquerda, visita a raiz e percorre sub-árvore direita, nesta
- ordem.
+A partir destas informações sobre o segredo deste labirinto, tem-se como
+ objetivo localizar as células de entrada e saída do mesmo, junto com o
+ comprimento do caminho percorrido de um ponto ao outro.
 \end_layout
 
 \begin_layout Standard
-O objetivo principal do trabalho é calcular a altura da árvore presente
- nas listagens, sabemos que o algoritmo que realiza este cálculo é relativamente
- simples e geralmente abordado em sala de aula durante o estudo da estrutura
- de árvores.
- Sabemos também que a altura da árvore é a distância da sua raiz até seu
- nodo mais afastado, pode-se dizer também que é o número de arestas que
- necessita-se percorrer para chegar ao nodo mais afastado da raiz.
- 
+Ao observar as informações prestadas no enunciado e os casos de teste disponibil
+izados, podemos chegar a conclusões inerentes à proposta que podem nos auxiliar
+ na resolução do problema, são elas:
+\end_layout
+
+\begin_layout Itemize
+Existem somente dois pontos que possibilitam sair do labirinto (uma entrada
+ e uma saída);
+\end_layout
+
+\begin_layout Itemize
+Não há definição clara sobre qual dos dois pontos de saída do labirinto
+ é de fato a entrada e vice-versa;
+\end_layout
+
+\begin_layout Itemize
+As posssíveis saídas e entradas do labirinto localizam-se nas bordas do
+ mesmo
 \end_layout
 
 \begin_layout Standard
-No exemplo de árvore mostrado acima a altura é 3, já que os nodos mais afastados
- de A (raiz) são H, I, J e K, e para chegar em qualquer um deles, a partir
- de A, é necessário percorrer três arestas.
- Se para chegar a qualquer um deles fosse necessário percorrer um número
- de arestas maior do que este, o mesmo seria a altura da árvore, já que
- considera-se a maior distância necessária.
+[falar do exemplo disposto no enunciado - fiz imagem]
 \end_layout
 
 \begin_layout Standard
-Sabendo de todas estas informações podemos observar que um empecilho para
- determinarmos a altura da árvore de cada listagem é a falta conhecimento
- sobre a estrutura completa da mesma, pois não temos diretamente, por exemplo,
- o número de arestas e os nodos aos quais elas se ligam.
- Portanto, considerando o exemplo dado, o objetivo resume-se a determinar
- a altura da árvore apenas com listagens como 
-\series bold
-A B D H I E C F G J K
-\series default
- e 
-\series bold
-H D I B E A F C J G K
-\series default
- e as informações que as cercam.
+[explicar a relação com grafos]
 \end_layout
 
 \begin_layout Standard
-A seguir será explicado como foi construído o algoritmo que soluciona o
- problema, a lógica abordada na resolução e, por fim, a desmonstração dos
- resultados obtidos para os casos de testes diponibilizados junto ao problema.
+[dizer que este labirinto será utilizado como exemplo ao longo do artigo]
 \end_layout
 
 \begin_layout Section*
@@ -311,133 +235,15 @@ Análise do problema
 \end_layout
 
 \begin_layout Standard
-De posse das informações contidas na introdução, ou seja, conhecendo os
- meios e informações disponíveis para solucionarmos o problema, é possível
- notar que sendo as duas listagens (dispostas no mesmo arquivo) referências
- de uma única árvore, é possível chegarmos a conclusões relacionadas à estrutura
- da mesma.
- Mas de que forma? A resposta é: através dos padrões estabelecidos nos caminhame
-ntos.
- Um exemplo disto é a listagem dada na Introdução, da qual podemos extrair
- que o primeiro elemento contido na listagem pré-fixada será sempre a raiz
- da árvore, já que respeita-se a sistemática do caminhamento da mesma.
- Portanto, podemos concluir que a raiz da árvore é o A, sem a necessidade
- de visualizar a graficamente a estrutura da mesma.
+[falar da falta de definição de entrada e saída]
 \end_layout
 
 \begin_layout Standard
-Seguindo este raciocínio, podemos observar que a raiz da árvore, na listagem
- infixada, estará no centro da mesma (exceto quando a quantidade de elementos
- da esquerda e direita forem diferentes) e ainda: tendo o nodo raiz da árvore
- a partir da primeira listagem, podemos localizá-lo na segunda e determinar
- quais nodos pertecem à esquerda da árvore e quais nodos pertencem à direita.
- A fim de ilustrar esta ideia segue a imagem:
+[como isso ajudaria no algoritmo de busca por profundida]
 \end_layout
 
 \begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename ../../../../Documents/PUC/3 - semestre/ALEST2/T1/binaryTree/artigo/imagem2.PNG
-	scale 50
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Demonstração da relação entre o primeiro elemento da listagem pré-fixada
- (raiz) e a listagem infixada.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Podemos notar que este raciocínio pode nos levar à estrutura completa da
- árvore já que, recursivamente, podemos chegar a estrutura completa da mesma,
- para que ao final possamos calcular a altura da estrtutura.
- Acompanhe o fluxo de repetições a seguir, que ilustra este raciocínio:
-\begin_inset Newline newline
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename ../../../../Documents/PUC/3 - semestre/ALEST2/T1/binaryTree/artigo/imagem3.PNG
-	scale 50
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Fluxo de recursão resumido para acompanhar a lógica de definição da estrutura
- da árvore.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-A imagem acima demonstra um fluxo resumido de como se dá o processo de estrutura
-ção da sub-árvore esquerda a partir da primeira divisão (Figura 2), a ilustração
- segue estes passos: determinação da raiz, localização da mesma na listagem
- infixada e a separação da sub-árvore em sub-árvore esquerda e direita.
- O processo é repetido até que a mesma esteja com sua estrutura completa
- (até chegarmos à estrutura de árvore ilustrada na Figura 1 - Página 1).
- Vale destacar que, para simplificar a demonstração, o mesmo processo ocorre
- nas sub-árvores resultantes de 
-\series bold
-F C J G K
-\series default
- (Figura 2), mas o mesmo não é exibido na imagem acima por tratar-se do
- mesmo processo desmontrado a partir de 
-\series bold
-H D I B E
-\series default
-.
-\end_layout
-
-\begin_layout Standard
-Podemos observar que H e I são filhos de D através desta divisão.
+[como foi resolvido este problema]
 \end_layout
 
 \begin_layout Section*
@@ -448,88 +254,25 @@ Solução
 O algoritmo para o problema em questão foi implementado na linguagem Java
  e segue a lógica descrita anteriormente.
  Os casos de testes estavam disponíveis em um arquivo de texto, portanto
- o algoritmo que calcula a altura da árvore foi implementado após a leitura
- do arquivo e armazenamento das listagens em duas listas separadas, uma
- contendo a listagem com caminhamento pré-fixado e outra contendo a listagem
- com caminhamento infixado.
- Para a resolução do problema optou-se por utlizar principalmente dois métodos:
- um método para montar a estrutura da árvore (nodo, esquerda e direita)
- e outro para calcular a altura da mesma.
- 
+ o algoritmo que localiza os pontos de entrada e saída do labirinto e a
+ distância percorrida foi implementado após a leitura do arquivo e armazenamento
+ dos dados em uma matriz nodos.
 \end_layout
 
 \begin_layout Standard
-O método que monta a estrutura da árvore retorna seu nodo raiz, para que
- seja utilizado no método que calcula a altura, este algoritmo percorre
- as posições na listagem pré-fixada e busca cada elemento na listagem infixada.
- Tendo a posição do elemento, a qual chamaremos de 
-\series bold
-marca
-\series default
- (Exemplo: na Figura 2 a marca de A na listagem infixidada é 5, posição
- na qual elemento se encontra).
- A partir desta posição podemos dividir a árvore em esquerda e direita,
- como descrito na análise do problema.
- Para controlar quando a determinação da estrutura de sub-árvores da esquerda
- e da direita forem finalizadas, o método recebe como parâmetro duas informações
- de onde ele deve inciar a comparação e onde deve parar.
- Isto, para que seja possível garantir que a procura de nodos do lado esquerdo
- está sendo feita somente nele e o mesmo para o lado direito, sem ultrapassar
- o limite da sub-árvore.
- A seguir estão alguns pontos importantes sobre o algoritmo:
-\end_layout
-
-\begin_layout Itemize
-Para determinar as sub-árvores da esquerda: a posição incial deve ser 0
- (na primeira repetição) e a final deve ser a 
-\series bold
-marca
-\series default
- -1, já que o nodo pai não deve ser divido novamente, mas sim servir de
- marca a a divisão da sub-árvore;
-\end_layout
-
-\begin_layout Itemize
-Para determinar as sub-árvores da direita: a posição inicial deve ser 
-\series bold
-marca
-\series default
- +1, já que o nodo pai também não deve ser considerado na nova divisão,
- e a final de ser incrementado desde a posição da marca até no máximo o
- tamanho da lista;
-\end_layout
-
-\begin_layout Itemize
-O valor da 
-\series bold
-marca
-\series default
- é atualizado a cada repetição, já que o índice que percorre a listagem
- pré-fixada é incrementado de 1 a 1 até chegar ao final da listagem;
-\end_layout
-
-\begin_layout Itemize
-Quando o índice inicial for maior que o tamanho do índice final (passados
- por parâmetro) significa que chegamos a um nodo folha 
-\family typewriter
-null,
-\family default
-este que não exerce influência na altura da árvore;
-\end_layout
-
-\begin_layout Itemize
-Quando o índice inicial for igual a índice final significa que chegamos
- a um nodo folha (um dos exemplo é o nodo I - Figura 1).
+[explicar o conteúdo da matriz]
 \end_layout
 
 \begin_layout Standard
-O método apresentado a seguir tem como objetivo definir a estrutura da árvore
- a partir das de listagens fornecidas, utilizando-se de todos os conceitos
- explicados acima.
- Utilizamos a classe Arvore para estabelecer a relação entre os nodos, com
- a seguinte estrutura: três atributos, esquerda, direita e elemento, sendo
- dois deles do tipo Arvore e o último do tipo String, além do construtor
- da classe.
+[explicar método que pega os pontos de entrada e saída][tem imagem]
+\end_layout
+
+\begin_layout Standard
+[explicar algoritmo de busca por profundidade]
+\end_layout
+
+\begin_layout Standard
+[substituir no formato de código a seguir pelos códigos do T2]
 \end_layout
 
 \begin_layout LyX-Code
@@ -644,84 +387,8 @@ retorna subarvore;
 \end_layout
 
 \begin_layout Standard
-A partir do retorno do nodo raiz pelo método listado acima, o método responsável
- por calcular a altura da árvore é o seguinte:
-\end_layout
-
-\begin_layout LyX-Code
-//cálculo da altura 
-\end_layout
-
-\begin_layout LyX-Code
-altura(Arvore elemento) {        
-\end_layout
-
-\begin_deeper
-\begin_layout LyX-Code
-se (elemento == null)            
-\end_layout
-
-\begin_deeper
-\begin_layout LyX-Code
-retorna -1;        
-\end_layout
-
-\end_deeper
-\begin_layout LyX-Code
-senão {             
-\end_layout
-
-\begin_deeper
-\begin_layout LyX-Code
-int alturaEsquerda = altura(elemento.esquerda);
-\end_layout
-
-\begin_layout LyX-Code
-int alturaDireita = altura(elemento.direita);
-\end_layout
-
-\begin_layout LyX-Code
-
-\end_layout
-
-\begin_layout LyX-Code
-//retorno a maior altura, esquer ou direita 
-\end_layout
-
-\begin_layout LyX-Code
-se (alturaEsquerda < alturaDireita) 
-\end_layout
-
-\begin_deeper
-\begin_layout LyX-Code
-retorna ++alturaEsquerda;            
-\end_layout
-
-\end_deeper
-\begin_layout LyX-Code
-senão retorna ++alturaDireita;         
-\end_layout
-
-\end_deeper
-\begin_layout LyX-Code
-}     
-\end_layout
-
-\end_deeper
-\begin_layout LyX-Code
-}
-\end_layout
-
-\begin_layout Standard
-Os métodos apresentados acima foram fundamentais na resolução do problema
- abordado neste artigo.E uma das formas de testar se o resultado era o esperado
- foi utilizar a árvore citada como exemplo durante a descrição do problema
- como teste de entrada (Introdução e Análise do problema), a partir da qual
- obtivemos o resultado de altura 3, como esperado.
- Além deste exemplo, também validou-se a seguinte situação: sendo cada uma
- as listagens, infixada e pré-fixada, compostas por um único elemento, o
- resultado esperado como altura da árvore seria 0.
- E este resultado foi obtido após o teste.
+[explicar como se chegou a conclusão que está certo][mostrar imagem do caminho
+ localizado para o labirinto de exemplo]
 \end_layout
 
 \begin_layout Section*
@@ -730,23 +397,26 @@ Resultados
 
 \begin_layout Standard
 Os resultados obtidos com os casos de testes, disponibilizados junto ao
- problema, exigiram um tempo de execução do algoritmo que variou entre 44
- e 36.834 milisegundos e esta diferença de tempo deve-se à complexidade das
- estruturadas das linstagens contidas em cada caso.
+ problema, exigiram um tempo de execução do algoritmo que variou entre 78
+ e 6.542 milisegundos e esta diferença de tempo deve-se à complexidade das
+ estruturadas das matrizes contidas em cada caso.
 \end_layout
 
 \begin_layout Standard
 Na tabela a seguir são apresentados os resultados obtidos para cada caso
  de teste, contendo o tempo de execução desde a leitura do arquivo até o
- retorno do resultado, além do retorno sobre a altura da árvore (objetivo
- do problema).
+ retorno do resultado, além do retorno sobre a entrada e saída do labirinto
+ e a distância (quantidade de nodos percorridos no caminho da entrada até
+ o fim do labirinto).
 \end_layout
 
 \begin_layout Standard
 \align center
 \begin_inset Tabular
-<lyxtabular version="3" rows="11" columns="3">
+<lyxtabular version="3" rows="11" columns="5">
 <features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
@@ -764,7 +434,25 @@ Caso de teste
 \begin_inset Text
 
 \begin_layout Plain Layout
-Resultado Obtido (altura da árvore)
+Entrada do labirinto: c(linha,coluna)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Saída do labirinto: c(linha,coluna)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Distância
 \end_layout
 
 \end_inset
@@ -784,7 +472,7 @@ Tempo de execução do algoritmo (milissegundos)
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso05
+caso25c
 \end_layout
 
 \end_inset
@@ -793,7 +481,25 @@ caso05
 \begin_inset Text
 
 \begin_layout Plain Layout
-14
+c0,3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+c24,12
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+624
 \end_layout
 
 \end_inset
@@ -802,7 +508,7 @@ caso05
 \begin_inset Text
 
 \begin_layout Plain Layout
-44
+78
 \end_layout
 
 \end_inset
@@ -813,7 +519,7 @@ caso05
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso10
+caso50c
 \end_layout
 
 \end_inset
@@ -822,7 +528,25 @@ caso10
 \begin_inset Text
 
 \begin_layout Plain Layout
-15
+c17,49
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+c49,43
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2.496 
 \end_layout
 
 \end_inset
@@ -831,7 +555,7 @@ caso10
 \begin_inset Text
 
 \begin_layout Plain Layout
-48
+268
 \end_layout
 
 \end_inset
@@ -842,7 +566,7 @@ caso10
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso15
+caso75c
 \end_layout
 
 \end_inset
@@ -851,7 +575,25 @@ caso15
 \begin_inset Text
 
 \begin_layout Plain Layout
-20
+c7,0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+c0,60
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5.624
 \end_layout
 
 \end_inset
@@ -860,7 +602,7 @@ caso15
 \begin_inset Text
 
 \begin_layout Plain Layout
-101
+303
 \end_layout
 
 \end_inset
@@ -871,7 +613,7 @@ caso15
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso20
+caso100c
 \end_layout
 
 \end_inset
@@ -880,7 +622,25 @@ caso20
 \begin_inset Text
 
 \begin_layout Plain Layout
-26
+c11,0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+c0,85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+621
 \end_layout
 
 \end_inset
@@ -889,7 +649,7 @@ caso20
 \begin_inset Text
 
 \begin_layout Plain Layout
-339
+8.418
 \end_layout
 
 \end_inset
@@ -900,7 +660,7 @@ caso20
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso25
+caso150c
 \end_layout
 
 \end_inset
@@ -909,7 +669,25 @@ caso25
 \begin_inset Text
 
 \begin_layout Plain Layout
-24
+c51,0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+c112,149
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+22.492
 \end_layout
 
 \end_inset
@@ -918,7 +696,7 @@ caso25
 \begin_inset Text
 
 \begin_layout Plain Layout
-322
+809
 \end_layout
 
 \end_inset
@@ -929,7 +707,7 @@ caso25
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso30
+caso200c
 \end_layout
 
 \end_inset
@@ -938,7 +716,25 @@ caso30
 \begin_inset Text
 
 \begin_layout Plain Layout
-30
+c0,91
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+c157,0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+39.999
 \end_layout
 
 \end_inset
@@ -947,7 +743,7 @@ caso30
 \begin_inset Text
 
 \begin_layout Plain Layout
-2.481
+1.395
 \end_layout
 
 \end_inset
@@ -958,7 +754,7 @@ caso30
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso35
+caso250c
 \end_layout
 
 \end_inset
@@ -967,7 +763,25 @@ caso35
 \begin_inset Text
 
 \begin_layout Plain Layout
-26
+c53,0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+c100,0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+62.499
 \end_layout
 
 \end_inset
@@ -976,7 +790,7 @@ caso35
 \begin_inset Text
 
 \begin_layout Plain Layout
-899
+1.911
 \end_layout
 
 \end_inset
@@ -987,7 +801,7 @@ caso35
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso40
+caso300c
 \end_layout
 
 \end_inset
@@ -996,7 +810,25 @@ caso40
 \begin_inset Text
 
 \begin_layout Plain Layout
-32
+c274,299
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+c279,0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+89.760
 \end_layout
 
 \end_inset
@@ -1005,7 +837,7 @@ caso40
 \begin_inset Text
 
 \begin_layout Plain Layout
-12.051
+2.590
 \end_layout
 
 \end_inset
@@ -1016,7 +848,7 @@ caso40
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso45
+caso400c
 \end_layout
 
 \end_inset
@@ -1025,7 +857,25 @@ caso45
 \begin_inset Text
 
 \begin_layout Plain Layout
-33
+c9,399
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+c38,0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+159.997
 \end_layout
 
 \end_inset
@@ -1034,7 +884,7 @@ caso45
 \begin_inset Text
 
 \begin_layout Plain Layout
-9.494
+4.134
 \end_layout
 
 \end_inset
@@ -1045,7 +895,7 @@ caso45
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso50
+caso500c
 \end_layout
 
 \end_inset
@@ -1054,7 +904,25 @@ caso50
 \begin_inset Text
 
 \begin_layout Plain Layout
-34
+c0,212
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+c0,381
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+221.421
 \end_layout
 
 \end_inset
@@ -1063,7 +931,7 @@ caso50
 \begin_inset Text
 
 \begin_layout Plain Layout
-36.834
+6.105
 \end_layout
 
 \end_inset
@@ -1078,7 +946,7 @@ caso50
 
 \begin_layout Standard
 \align center
-Tabela1: Resultados dos casos de testes aplicados ao algoritmo desenvolvido.
+Tabela1: Resultados dos casos de teste aplicados ao algoritmo desenvolvido.
 \end_layout
 
 \begin_layout Section*
@@ -1092,9 +960,13 @@ A solução desenvolvida e apresentada ao longo deste artigo obteve resultados
  Tendo em vista que algumas decisões a nível lógico e estrutural do código
  podem afetar de forma significativa os resultados e efeciência do algoritmo,
  foi de extrema importância o entendimento do problema como um todo e detalhamen
-to das informações inerentes à sistemática dos caminhamentos pré e infixidado.
+to das informações inerentes à estrutura do labirinto.
  O que possibilitou chegar-se a resultados satisfatórios e o objetivo principal
  concluído.
+\end_layout
+
+\begin_layout Standard
+[COLOCAR REFERÊNCIAS ATUALIZADAS]
 \end_layout
 
 \begin_layout Bibliography
