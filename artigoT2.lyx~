@@ -204,8 +204,8 @@ izados, podemos chegar a conclusões inerentes à proposta que podem nos auxilia
 \end_layout
 
 \begin_layout Itemize
-Existem somente dois pontos que possibilitam sair do labirinto (uma entrada
- e uma saída);
+Existem somente dois pontos que possibilitam ir para fora do labirinto (uma
+ entrada e uma saída);
 \end_layout
 
 \begin_layout Itemize
@@ -215,19 +215,180 @@ Não há definição clara sobre qual dos dois pontos de saída do labirinto
 
 \begin_layout Itemize
 As posssíveis saídas e entradas do labirinto localizam-se nas bordas do
- mesmo
+ mesmo.
 \end_layout
 
 \begin_layout Standard
-[falar do exemplo disposto no enunciado - fiz imagem]
+Para ilustrarmos o problema e trabalharmos na sua resolução, vamos utilizar
+ o exemplo de fornecido no enunciado do trabalho, este que contém um modelo
+ de caso de teste, ilustração do labirinto deste caso e os valores dele
+ convertidos em binário, como é possível observar na imagem abaixo.
 \end_layout
 
 \begin_layout Standard
-[explicar a relação com grafos]
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename imagens/labirintoCompletoComLegenda.PNG
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Exemplo que será abordado ao decorrer do artigo.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-[dizer que este labirinto será utilizado como exemplo ao longo do artigo]
+Ao observar este exemplo podemos abstrair mais algumas informações úteis
+ para o entendimento da proposta e análise de como a solução deve ser implementa
+da.
+ São elas:
+\end_layout
+
+\begin_layout Itemize
+A primeira linha do arquivo de caso de teste, sempre apresentará as dimensões
+ do labirinto;
+\end_layout
+
+\begin_layout Itemize
+As informações sobre as células do caso de teste estão dispostas em forma
+ de matriz;
+\end_layout
+
+\begin_layout Itemize
+É necessário converter o valor de cada célula para que tenhamos as informações
+ sobre as paredes da mesma;
+\end_layout
+
+\begin_layout Itemize
+Uma célula está ligada a outra quando existe uma direção (superior, direita,
+ inferior ou esquerda) com o valor 0 e em seguida uma célula existente.
+\end_layout
+
+\begin_layout Itemize
+Como identificar entrada/saída do labirinto? sabemos que elas possuem ao
+ menos uma das direções com valor = 0, mas para se caracterizar como tal,
+ esta direção deve estar nas bordas do labirinto, ou seja, estas são as
+ possiblibidades para saída/entrada do labirinto: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Lado 
+\series bold
+superior
+\series default
+ da célula: linha = 0;
+\end_layout
+
+\begin_layout Itemize
+Lado 
+\series bold
+esquerdo
+\series default
+ da célula: coluna = 0;
+\end_layout
+
+\begin_layout Itemize
+Lado 
+\series bold
+inferior
+\series default
+ da célula: linha = tamanho da matriz - 1;
+\end_layout
+
+\begin_layout Itemize
+Lado 
+\series bold
+direito
+\series default
+ da célula: coluna = tamanho da matriz - 1;
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Os valores apresentados acima, de linha e coluna, são baseados no fato de
+ que a matriz é composta por 
+\series bold
+n
+\series default
+ linhas e 
+\series bold
+m 
+\series default
+colunas, sendo que 
+\series bold
+n
+\series default
+ 
+\begin_inset Formula $\geq$
+\end_inset
+
+ 0 e 
+\series bold
+m
+\series default
+ 
+\begin_inset Formula $\leq$
+\end_inset
+
+ tamanho da matriz.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename imagens/numeracaoNodos.PNG
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Valores de n,m em para cada célula da matriz.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section*
@@ -235,15 +396,80 @@ Análise do problema
 \end_layout
 
 \begin_layout Standard
-[falar da falta de definição de entrada e saída]
+Ao analisarmos o labirinto em uma estrutura de grafos podemos observar que
+ cada célula do labirinto corresponde a um vértice do grafo a ligação entre
+ estes vértices depende dos valores armazenas no mesmo.
+ Portanto, assim teríamos uma grafo não direcionado - pois o caminho que
+ se faz de um vértice ao outro pode servir tanto para de ida quanto para
+ volta.
 \end_layout
 
 \begin_layout Standard
-[como isso ajudaria no algoritmo de busca por profundida]
+Como não existe nenhum critério definido para especificar qual é a entrada
+ e qual é a saída, portanto, consideraremos que a entrada será a primeira
+ célula para fora do grafo que o algoritmo localizar e a saída será a segunda
+ que o algoritmo identificar como tal.
+ 
 \end_layout
 
 \begin_layout Standard
-[como foi resolvido este problema]
+Devido à necessidade de armazenar na vértice infomações sobre as paredes
+ do mesmo, cabe considerar que cada vértice do grafo deve direcionar para
+ tais informações e portanto, será considerada a seguinte estrtutura:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename imagens/cadaNodo.PNG
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Cada vértice do grafo referencia um Nodo.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Com base nestas informações , considerando que já temos informações suficientes
+ para determinar qual é o vértice de entrada e qual é o de saída - a partir
+ de sua posição na matriz -, o próximo passo é localizar o caminho de um
+ ponto ao outro.
+ Mas como fazer isto? Um algoritmo que resolve este problema é o algoritmo
+ de busca por profundidade no grafo, já que este precisa de uma entrada
+ específica e uma saída e percorre o grafo da seguinte forma: parte de um
+ nodo e busca seus adjacentes.
+ Vale lembrar que o caminho que precisamos encontrar nada mais é que o conjuntos
+ de nodos adjacentes necessário para ir de um ponto ao outro.
+\end_layout
+
+\begin_layout Standard
+A busca em profundidade, neste caso, vai ser feita até que o vértice de
+ saída seja encontrado e durante esta busca, é possível contar o número
+ de vértices percorridos e portanto, obtendo o resultado que o problema
+ nos pede.
 \end_layout
 
 \begin_layout Section*
@@ -256,45 +482,85 @@ O algoritmo para o problema em questão foi implementado na linguagem Java
  Os casos de testes estavam disponíveis em um arquivo de texto, portanto
  o algoritmo que localiza os pontos de entrada e saída do labirinto e a
  distância percorrida foi implementado após a leitura do arquivo e armazenamento
- dos dados em uma matriz nodos.
+ dos dados em uma matriz, na qual cada célula armazena um nodo (Figura 3).
 \end_layout
 
 \begin_layout Standard
-[explicar o conteúdo da matriz]
+O nodo é representado por uma estrutura com os seguintes atributos: superior,
+ direita, inferior e esquerda - sendo que cada um deles armazena um bit
+ -, marca - para controlar se o nodo já foi visitado na busca por profundidade
+ - e uma lista de adjacentes do nodo.
 \end_layout
 
 \begin_layout Standard
-[explicar método que pega os pontos de entrada e saída][tem imagem]
+A imagem a seguir também é relacionada ao labirinto apresentado na introdução,
+ está disposta afim de ilustrar as informações que serão utilizadas no algoritmo
+ que será descrito a seguir.
 \end_layout
 
 \begin_layout Standard
-[explicar algoritmo de busca por profundidade]
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename imagens/saidaTerminalMatriz.PNG
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Imagem dos bits armazenado em cada nodo da matriz.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-[substituir no formato de código a seguir pelos códigos do T2]
+O algoritmo a seguir localiza a entrada e saída do labirinto e armazena
+ as coordenadas x e y destas em uma lista chamada 
+\series bold
+pontos
+\series default
+.
 \end_layout
 
 \begin_layout LyX-Code
-//Na primeira execução de = 0 e para = (tamanho da listagem)-1 
-\end_layout
-
-\begin_layout LyX-Code
-estruturaArvore(int de, int para) {
+para i de 0 ate tamanho da matriz {
 \end_layout
 
 \begin_deeper
 \begin_layout LyX-Code
-//Critério para definição de nodo folha nulo 
+//testa paredes superiores dos nodos da linha 0 da matriz
 \end_layout
 
 \begin_layout LyX-Code
-se (de > para)
+se (matriz[0][i].superior == 0)
 \end_layout
 
 \begin_deeper
 \begin_layout LyX-Code
-retorna null; 
+adiciona 0 em ponto;//coordenada da linha armazenada
+\end_layout
+
+\begin_layout LyX-Code
+adiciona i em ponto;//coordenada da coluna armazenada
 \end_layout
 
 \end_deeper
@@ -303,84 +569,69 @@ retorna null;
 \end_layout
 
 \begin_layout LyX-Code
-String nodoPreFixada = listagemPre.get(indice++); 
+//testa paredes esquerdas dos nodos da coluna 0
 \end_layout
 
 \begin_layout LyX-Code
-Arvore subarvore = nova Arvore(nodoPreFixada); 
-\end_layout
-
-\begin_layout LyX-Code
-
-\end_layout
-
-\begin_layout LyX-Code
-//Chegamos a uma extremidade (nodo folha)
-\end_layout
-
-\begin_layout LyX-Code
-se (de == para) 
+se (matriz[i][0].esquerda == 0) 
 \end_layout
 
 \begin_deeper
 \begin_layout LyX-Code
-retorna subarvore;
+adiciona i em ponto;
+\end_layout
+
+\begin_layout LyX-Code
+adiciona 0 em ponto;
+\end_layout
+
+\begin_layout LyX-Code
+
 \end_layout
 
 \end_deeper
 \begin_layout LyX-Code
-
+//testa paredes inferiores dos nodos da ultima linha da matriz (tamanho
+ da matriz -1)
 \end_layout
 
 \begin_layout LyX-Code
-//Marcamos a posição do elemento de indíce atual na listagem infixada 
+se (matriz[tamanhoDaMatriz-1][i].inferior == 0) 
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+adiciona (tamanhoDaMatriz-1) em ponto;
 \end_layout
 
 \begin_layout LyX-Code
-int marca = listagemInfixada.indexOf(subarvore.elemento); 
-\end_layout
-
-\begin_layout LyX-Code
-
-\end_layout
-
-\begin_layout LyX-Code
-//Buscamos o nodo da esquerda, passando os novos índices para localizá-lo
- 
-\end_layout
-
-\begin_layout LyX-Code
-subarvore.esquerda = estruturaArvore(de, marca-1); 
+adiciona i em ponto;
 \end_layout
 
 \begin_layout LyX-Code
 
 \end_layout
 
+\end_deeper
 \begin_layout LyX-Code
-//buscamos o nodo da direita, passando os novos índices para localizá-lo
+//testa paredes direitas dos nodos da ultima coluna da matriz (tamanho da
+ matriz -1)
 \end_layout
 
 \begin_layout LyX-Code
-subarvore.direita = estruturaArvore(marca+1, para); 
+se (matriz[i][tamanhoDaMatriz-1].direita == 0) 
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+adiciona i em ponto;
 \end_layout
 
 \begin_layout LyX-Code
-
+adiciona (tamanhoDaMatriz-1) em ponto;
 \end_layout
 
-\begin_layout LyX-Code
-//Após gerada a estrutura da árvore: o nodo raiz é retornado
-\end_layout
-
-\begin_layout LyX-Code
-//A partir do qual é realizado o cálculo da altura
-\end_layout
-
-\begin_layout LyX-Code
-retorna subarvore; 
-\end_layout
-
+\end_deeper
 \end_deeper
 \begin_layout LyX-Code
 }
@@ -406,8 +657,8 @@ Os resultados obtidos com os casos de testes, disponibilizados junto ao
 Na tabela a seguir são apresentados os resultados obtidos para cada caso
  de teste, contendo o tempo de execução desde a leitura do arquivo até o
  retorno do resultado, além do retorno sobre a entrada e saída do labirinto
- e a distância (comprimento do caminho percorrido desde a entrada até o
- fim do labirinto).
+ e a distância (quantidade de nodos percorridos no caminho da entrada até
+ o fim do labirinto).
 \end_layout
 
 \begin_layout Standard
@@ -434,7 +685,7 @@ Caso de teste
 \begin_inset Text
 
 \begin_layout Plain Layout
-Entrada do labirinto
+Entrada do labirinto: c(linha,coluna)
 \end_layout
 
 \end_inset
@@ -443,7 +694,7 @@ Entrada do labirinto
 \begin_inset Text
 
 \begin_layout Plain Layout
-Saída do labirinto
+Saída do labirinto: c(linha,coluna)
 \end_layout
 
 \end_inset
@@ -481,7 +732,7 @@ caso25c
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+c0,3
 \end_layout
 
 \end_inset
@@ -490,7 +741,7 @@ caso25c
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+c24,12
 \end_layout
 
 \end_inset
@@ -499,7 +750,7 @@ caso25c
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+624
 \end_layout
 
 \end_inset
@@ -508,7 +759,7 @@ caso25c
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+78
 \end_layout
 
 \end_inset
@@ -519,7 +770,7 @@ caso25c
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso10
+caso50c
 \end_layout
 
 \end_inset
@@ -528,7 +779,7 @@ caso10
 \begin_inset Text
 
 \begin_layout Plain Layout
-15
+c17,49
 \end_layout
 
 \end_inset
@@ -537,7 +788,7 @@ caso10
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+c49,43
 \end_layout
 
 \end_inset
@@ -546,7 +797,7 @@ caso10
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+2.496 
 \end_layout
 
 \end_inset
@@ -555,7 +806,7 @@ caso10
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+268
 \end_layout
 
 \end_inset
@@ -566,7 +817,7 @@ caso10
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso15
+caso75c
 \end_layout
 
 \end_inset
@@ -575,7 +826,7 @@ caso15
 \begin_inset Text
 
 \begin_layout Plain Layout
-20
+c7,0
 \end_layout
 
 \end_inset
@@ -584,7 +835,7 @@ caso15
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+c0,60
 \end_layout
 
 \end_inset
@@ -593,7 +844,7 @@ caso15
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+5.624
 \end_layout
 
 \end_inset
@@ -602,7 +853,7 @@ caso15
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+303
 \end_layout
 
 \end_inset
@@ -613,7 +864,7 @@ caso15
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso20
+caso100c
 \end_layout
 
 \end_inset
@@ -622,7 +873,7 @@ caso20
 \begin_inset Text
 
 \begin_layout Plain Layout
-26
+c11,0
 \end_layout
 
 \end_inset
@@ -631,7 +882,7 @@ caso20
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+c0,85
 \end_layout
 
 \end_inset
@@ -640,7 +891,7 @@ caso20
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+621
 \end_layout
 
 \end_inset
@@ -649,7 +900,7 @@ caso20
 \begin_inset Text
 
 \begin_layout Plain Layout
-339
+8.418
 \end_layout
 
 \end_inset
@@ -660,7 +911,7 @@ caso20
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso25
+caso150c
 \end_layout
 
 \end_inset
@@ -669,7 +920,7 @@ caso25
 \begin_inset Text
 
 \begin_layout Plain Layout
-24
+c51,0
 \end_layout
 
 \end_inset
@@ -678,7 +929,7 @@ caso25
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+c112,149
 \end_layout
 
 \end_inset
@@ -687,7 +938,7 @@ caso25
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+22.492
 \end_layout
 
 \end_inset
@@ -696,7 +947,7 @@ caso25
 \begin_inset Text
 
 \begin_layout Plain Layout
-322
+809
 \end_layout
 
 \end_inset
@@ -707,7 +958,7 @@ caso25
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso30
+caso200c
 \end_layout
 
 \end_inset
@@ -716,7 +967,7 @@ caso30
 \begin_inset Text
 
 \begin_layout Plain Layout
-30
+c0,91
 \end_layout
 
 \end_inset
@@ -725,7 +976,7 @@ caso30
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+c157,0
 \end_layout
 
 \end_inset
@@ -734,7 +985,7 @@ caso30
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+39.999
 \end_layout
 
 \end_inset
@@ -743,7 +994,7 @@ caso30
 \begin_inset Text
 
 \begin_layout Plain Layout
-2.481
+1.395
 \end_layout
 
 \end_inset
@@ -754,7 +1005,7 @@ caso30
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso35
+caso250c
 \end_layout
 
 \end_inset
@@ -763,7 +1014,7 @@ caso35
 \begin_inset Text
 
 \begin_layout Plain Layout
-26
+c53,0
 \end_layout
 
 \end_inset
@@ -772,7 +1023,7 @@ caso35
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+c100,0
 \end_layout
 
 \end_inset
@@ -781,7 +1032,7 @@ caso35
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+62.499
 \end_layout
 
 \end_inset
@@ -790,7 +1041,7 @@ caso35
 \begin_inset Text
 
 \begin_layout Plain Layout
-899
+1.911
 \end_layout
 
 \end_inset
@@ -801,7 +1052,7 @@ caso35
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso40
+caso300c
 \end_layout
 
 \end_inset
@@ -810,7 +1061,7 @@ caso40
 \begin_inset Text
 
 \begin_layout Plain Layout
-32
+c274,299
 \end_layout
 
 \end_inset
@@ -819,7 +1070,7 @@ caso40
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+c279,0
 \end_layout
 
 \end_inset
@@ -828,7 +1079,7 @@ caso40
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+89.760
 \end_layout
 
 \end_inset
@@ -837,7 +1088,7 @@ caso40
 \begin_inset Text
 
 \begin_layout Plain Layout
-12.051
+2.590
 \end_layout
 
 \end_inset
@@ -848,7 +1099,7 @@ caso40
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso45
+caso400c
 \end_layout
 
 \end_inset
@@ -857,7 +1108,7 @@ caso45
 \begin_inset Text
 
 \begin_layout Plain Layout
-33
+c9,399
 \end_layout
 
 \end_inset
@@ -866,7 +1117,7 @@ caso45
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+c38,0
 \end_layout
 
 \end_inset
@@ -875,7 +1126,7 @@ caso45
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+159.997
 \end_layout
 
 \end_inset
@@ -884,7 +1135,7 @@ caso45
 \begin_inset Text
 
 \begin_layout Plain Layout
-9.494
+4.134
 \end_layout
 
 \end_inset
@@ -895,7 +1146,7 @@ caso45
 \begin_inset Text
 
 \begin_layout Plain Layout
-caso50
+caso500c
 \end_layout
 
 \end_inset
@@ -904,7 +1155,7 @@ caso50
 \begin_inset Text
 
 \begin_layout Plain Layout
-34
+c0,212
 \end_layout
 
 \end_inset
@@ -913,7 +1164,7 @@ caso50
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+c0,381
 \end_layout
 
 \end_inset
@@ -922,7 +1173,7 @@ caso50
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+221.421
 \end_layout
 
 \end_inset
@@ -931,7 +1182,7 @@ caso50
 \begin_inset Text
 
 \begin_layout Plain Layout
-36.834
+6.105
 \end_layout
 
 \end_inset
@@ -946,7 +1197,7 @@ caso50
 
 \begin_layout Standard
 \align center
-Tabela1: Resultados dos casos de testes aplicados ao algoritmo desenvolvido.
+Tabela1: Resultados dos casos de teste aplicados ao algoritmo desenvolvido.
 \end_layout
 
 \begin_layout Section*
@@ -960,7 +1211,7 @@ A solução desenvolvida e apresentada ao longo deste artigo obteve resultados
  Tendo em vista que algumas decisões a nível lógico e estrutural do código
  podem afetar de forma significativa os resultados e efeciência do algoritmo,
  foi de extrema importância o entendimento do problema como um todo e detalhamen
-to das informações inerentes à sistemática dos caminhamentos pré e infixidado.
+to das informações inerentes à estrutura do labirinto.
  O que possibilitou chegar-se a resultados satisfatórios e o objetivo principal
  concluído.
 \end_layout
