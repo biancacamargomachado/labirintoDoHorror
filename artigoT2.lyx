@@ -197,8 +197,8 @@ A partir destas informações sobre o segredo deste labirinto, tem-se como
  objetivo localizar as células de entrada e saída do mesmo, junto com o
  comprimento do caminho percorrido de um ponto ao outro.
  Ao observar as informações prestadas no enunciado e os casos de teste disponibi
-lizados, podemos chegar a conclusões inerentes à proposta que podem nos
- auxiliar na resolução do problema, são elas:
+lizados, podemos chegar a conclusões inerentes à proposta que podem auxiliar
+ na resolução do problema, são elas:
 \end_layout
 
 \begin_layout Itemize
@@ -212,8 +212,7 @@ Não há definição clara sobre qual dos dois pontos de saída do labirinto
 \end_layout
 
 \begin_layout Itemize
-As posssíveis saídas e entradas do labirinto localizam-se nas bordas do
- mesmo.
+As possíveis saídas e entradas do labirinto localizam-se nas bordas do mesmo.
 \end_layout
 
 \begin_layout Standard
@@ -289,10 +288,10 @@ Uma célula está ligada a outra quando existe uma direção (superior, direita,
 \end_layout
 
 \begin_layout Itemize
-Como identificar entrada/saída do labirinto? sabemos que elas possuem ao
+Como identificar entrada/saída do labirinto? Sabemos que elas possuem ao
  menos uma das direções com valor = 0, mas para se caracterizar como tal,
  esta direção deve estar nas bordas do labirinto, ou seja, estas são as
- possiblibidades para saída/entrada do labirinto: 
+ possibilidades para saída/entrada do labirinto: 
 \end_layout
 
 \begin_deeper
@@ -416,7 +415,7 @@ Como não existe nenhum critério definido para especificar qual é a entrada
 \begin_layout Standard
 Devido à necessidade de armazenar no vértice informações sobre as paredes
  do mesmo, cabe considerar que cada vértice do grafo deve direcionar para
- tais informações e portanto, será considerada a seguinte estrtutura:
+ tais informações e portanto, será considerada a seguinte estrutura:
 \end_layout
 
 \begin_layout Standard
@@ -672,7 +671,7 @@ Ao final da execução do algoritmo acima,
 pontos 
 \series default
 terá 4 coordenadas, sendo as duas primeiras x e y da célula em que se encontra
- a entrada do labirinto e as outras duas referentes à saída do labirinto.
+ a entrada do labirinto e as duas últimas referentes à saída do labirinto.
  E com isso podemos chamar o método 
 \series bold
 buscaProf 
@@ -758,7 +757,7 @@ retorne o número de tamanho do caminho percorrido da entrada até a saída
 \end_layout
 
 \begin_layout LyX-Code
-setaAdjacente() {
+setaAdjacentes() {
 \end_layout
 
 \begin_layout LyX-Code
@@ -832,8 +831,8 @@ Utilizando as coordenadas dos nodos na matriz, como mostrado na Figura 3,
 \end_layout
 
 \begin_layout Standard
-Para o algoritmo abordado como exemplo ao longo deste artigo, obteu-se os
- seguintes resultados:
+Para o algoritmo abordado como exemplo ao longo deste artigo, obteve-se
+ os seguintes resultados:
 \end_layout
 
 \begin_layout Itemize
@@ -845,7 +844,7 @@ Saída: c0,3 (célula na linha 0 e coluna 3)
 \end_layout
 
 \begin_layout Itemize
-Distância: 15 nodos percorridos.
+Distância: 15 células percorridas.
 \end_layout
 
 \begin_layout Standard
@@ -873,7 +872,8 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Caminho percorrido no labirinto de exemplo.
+Caminho (em verde) percorrido no labirinto de exemplo.
+ Célula de entrada: c2,3 e célula de saída: c0,3
 \end_layout
 
 \end_inset
@@ -893,7 +893,7 @@ Resultados
 \begin_layout Standard
 Os resultados obtidos com os casos de testes, disponibilizados junto ao
  problema, exigiram um tempo de execução do algoritmo que variou entre 78
- e 6.542 milisegundos e esta diferença de tempo deve-se à complexidade das
+ e 6.542 milissegundos e esta diferença de tempo deve-se à complexidade das
  estruturadas das matrizes contidas em cada caso.
 \end_layout
 
@@ -952,7 +952,7 @@ Saída: c(linha,coluna)
 \begin_inset Text
 
 \begin_layout Plain Layout
-Distância
+Distância (células)
 \end_layout
 
 \end_inset
@@ -1458,7 +1458,7 @@ A solução desenvolvida e apresentada ao longo deste artigo obteve resultados
  satisfatórios em relação às saídas esperadas e o tempo necessário para
  que o algoritmo resolvesse os problemas disponíveis nos casos de teste.
  Tendo em vista que algumas decisões a nível lógico e estrutural do código
- podem afetar de forma significativa os resultados e efeciência do algoritmo,
+ podem afetar de forma significativa os resultados e eficiência do algoritmo,
  foi de extrema importância o entendimento do problema como um todo e detalhamen
 to das informações inerentes à estrutura do labirinto.
  O que possibilitou chegar-se a resultados satisfatórios e o objetivo principal
