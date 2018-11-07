@@ -574,8 +574,8 @@ Imagem dos bits armazenado em cada nodo da matriz.
 \end_layout
 
 \begin_layout Standard
-O algoritmo a seguir localiza a entrada e saída do labirinto e armazena
- as coordenadas x e y destas em uma lista chamada 
+O algoritmo a seguir localiza a entrada e saída do labirinto (Figura 2,
+ 3 e 4) e armazena as coordenadas x e y destas em uma lista chamada 
 \series bold
 pontos
 \series default

@@ -116,7 +116,7 @@ Escola Politécnica - PUCRS
 Este artigo descreve uma solução para o segundo problema proposto na disciplina
  Algoritmos e Estruturas de Dados II no semestre 2018/2, trata-se da determinaçã
 o da entrada, saída e distância percorrida entre elas no labirinto de Teseu,
- Ariadina e Minotauro.
+ Ariadne e Minotauro.
  Este, que teve seu segredo descoberto em uma escavação em Creta.
  Foram disponibilizados 10 casos de teste para resolução do problema: cada
  um contém uma matriz de hexadecimais, utilizada para representar o labirinto,
