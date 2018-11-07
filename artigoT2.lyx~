@@ -419,6 +419,19 @@ Devido à necessidade de armazenar na vértice infomações sobre as paredes
 \end_layout
 
 \begin_layout Standard
+Com base nestas informações, considerando que já temos informações suficientes
+ para determinar qual é o vértice de entrada e qual é o de saída - a partir
+ de sua posição na matriz -, o próximo passo é localizar o caminho de um
+ ponto ao outro.
+ Mas como fazer isto? Um algoritmo que resolve este problema é o algoritmo
+ de busca por profundidade no grafo, já que este precisa de uma entrada
+ específica e uma saída e percorre o grafo da seguinte forma: parte de um
+ nodo e busca seus adjacentes.
+ Vale lembrar que o caminho que precisamos encontrar nada mais é que o conjuntos
+ de nodos adjacentes necessário para ir de um ponto ao outro.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -453,23 +466,47 @@ Cada vértice do grafo referencia um Nodo.
 \end_layout
 
 \begin_layout Standard
-Com base nestas informações , considerando que já temos informações suficientes
- para determinar qual é o vértice de entrada e qual é o de saída - a partir
- de sua posição na matriz -, o próximo passo é localizar o caminho de um
- ponto ao outro.
- Mas como fazer isto? Um algoritmo que resolve este problema é o algoritmo
- de busca por profundidade no grafo, já que este precisa de uma entrada
- específica e uma saída e percorre o grafo da seguinte forma: parte de um
- nodo e busca seus adjacentes.
- Vale lembrar que o caminho que precisamos encontrar nada mais é que o conjuntos
- de nodos adjacentes necessário para ir de um ponto ao outro.
+Segundo [1], a estratégia seguida pela busca em profundidade é, como seu
+ nome implica, procurar 
+\begin_inset Quotes eld
+\end_inset
+
+mais fundo
+\begin_inset Quotes erd
+\end_inset
+
+ no grafo sempre que possível.
+ Na busca por profundidade, as arestas são exploradas a partir do vértice
+\series bold
+ v
+\series default
+ mais recentemente descoberto que ainda tem arestas inexploradas saindo
+ dele.
+ Quando todas as arestas de 
+\series bold
+v
+\series default
+ são exploradas, a busca 
+\begin_inset Quotes eld
+\end_inset
+
+regressa
+\begin_inset Quotes erd
+\end_inset
+
+ para explorar as arestas que deixam o vértice a partir do qual 
+\series bold
+v
+\series default
+ foi descoberto.
+ Esse processo continua até descobrirmos todos os vértices acessíveis a
+ partir do vértice de origem inicial.
 \end_layout
 
 \begin_layout Standard
 A busca em profundidade, neste caso, vai ser feita até que o vértice de
  saída seja encontrado e durante esta busca, é possível contar o número
- de vértices percorridos e portanto, obtendo o resultado que o problema
- nos pede.
+ de vértices percorridos, o resultado que o problema nos pede.
 \end_layout
 
 \begin_layout Section*
@@ -508,6 +545,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename imagens/saidaTerminalMatriz.PNG
+	scale 80
 
 \end_inset
 
@@ -565,10 +603,6 @@ adiciona i em ponto;//coordenada da coluna armazenada
 
 \end_deeper
 \begin_layout LyX-Code
-
-\end_layout
-
-\begin_layout LyX-Code
 //testa paredes esquerdas dos nodos da coluna 0
 \end_layout
 
@@ -583,10 +617,6 @@ adiciona i em ponto;
 
 \begin_layout LyX-Code
 adiciona 0 em ponto;
-\end_layout
-
-\begin_layout LyX-Code
-
 \end_layout
 
 \end_deeper
@@ -606,10 +636,6 @@ adiciona (tamanhoDaMatriz-1) em ponto;
 
 \begin_layout LyX-Code
 adiciona i em ponto;
-\end_layout
-
-\begin_layout LyX-Code
-
 \end_layout
 
 \end_deeper
@@ -638,8 +664,222 @@ adiciona (tamanhoDaMatriz-1) em ponto;
 \end_layout
 
 \begin_layout Standard
-[explicar como se chegou a conclusão que está certo][mostrar imagem do caminho
- localizado para o labirinto de exemplo]
+Ao final da execução do algoritmo acima, 
+\series bold
+pontos 
+\series default
+terá 4 coordenadas, sendo as duas primeiras x e y da célula em que se encontra
+ a entrada do labirinto e as outras duas referentes à saída do labirinto.
+ E com isso podemos chamar o método 
+\series bold
+buscaProf 
+\series default
+que recebe por parâmetro o nodo de entrada do labirinto e um contador, inicialme
+nte com o valor 0.
+ Este contador armazenará o número de nodos percorridos para chegar na saída
+ do labirinto, a partir da entrada.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+buscaProf(Nodo atual, contador) {
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+//critério de parada: se chegou no objetivo
+\end_layout
+
+\begin_layout LyX-Code
+se (atual == saida)
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+retorna contador
+\end_layout
+
+\end_deeper
+\begin_layout LyX-Code
+//marca o nodo como visitado
+\end_layout
+
+\begin_layout LyX-Code
+nodo.marca = 1
+\end_layout
+
+\begin_layout LyX-Code
+para cada nodo n adjacente de nodo atual 
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+se n não foi visitado
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+contador++
+\end_layout
+
+\begin_layout LyX-Code
+//busca o próximo adjacente ao nodo atual
+\end_layout
+
+\begin_layout LyX-Code
+contador = buscaProf(n,contador)
+\end_layout
+
+\end_deeper
+\end_deeper
+\end_deeper
+\begin_layout LyX-Code
+retorna contador
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout Standard
+Observe que, para que o algoritmo acima funcione corretamente, é necessário
+ que o atributo contendo a lista de adjacentes do nodo esteja completa.
+ O algoritmo a seguir (setaAdjacentes) insere todos os nodos adjacentes
+ (diretamente ligados ao nodo em questão) na lista correspondente, possibilitand
+o que o algoritmo 
+\series bold
+buscaProf 
+\series default
+retorne o número de tamanho do caminho percorrido da entrada até a saída
+ do labirinto.
+\end_layout
+
+\begin_layout LyX-Code
+setaAdjacente() {
+\end_layout
+
+\begin_layout LyX-Code
+//critério de parada: se chegou no objetivo
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+para i de 0 até (tamanhDaMatriz-1)
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+para j de 0 até (tamanhDaMatriz-1)
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+se (matriz[i][j].superior == 0) e i maior que 0
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+adiciona m[i-1][j] na lista de adjacentes de m[i][j]
+\end_layout
+
+\end_deeper
+\begin_layout LyX-Code
+se (matriz[i][j].direita == 0) e j menor que (tamanho da matriz - 1)
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+adiciona m[i][j+1] na lista de adjacentes de m[i][j]
+\end_layout
+
+\end_deeper
+\begin_layout LyX-Code
+se (matriz[i][j].inferior == 0) e i menor que (tamanho da matriz - 1)
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+adiciona m[i+1][j] na lista de adjacentes de m[i][j]
+\end_layout
+
+\end_deeper
+\begin_layout LyX-Code
+se (matriz[i][j].esquerda == 0) e j maior que 0
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+adiciona m[i][j-1] na lista de adjacentes de m[i][j]
+\end_layout
+
+\end_deeper
+\end_deeper
+\end_deeper
+\end_deeper
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout Standard
+Utilizando as coordenadas dos nodos na matriz, como mostrado na Figura 3,
+ foi possível obter os adjacentes de cada nodo de acordo com a direção em
+ que não havia parede (valor = 0).
+ Com este algoritmo foi possível localizar os nodos adjacentes e então realizar
+ a busca por profundidade, para no fim obtermos os resultados esperados.
+\end_layout
+
+\begin_layout Standard
+Para o algoritmo abordado como exemplo ao longo deste artigo, obteu-se os
+ seguintes resultados:
+\end_layout
+
+\begin_layout Itemize
+Entrada: c2,3 (célula na linha 2 e coluna 3)
+\end_layout
+
+\begin_layout Itemize
+Saída: c0,3 (célula na linha 0 e coluna 3)
+\end_layout
+
+\begin_layout Itemize
+Distância: 15 nodos percorridos.
+\end_layout
+
+\begin_layout Standard
+Na imagem a seguir, encontra-se a ilustração destes resultados.
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename imagens/imagemCaminhoCompleto.PNG
+	scale 80
+	rotateOrigin center
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Caminho percorrido no labirinto de exemplo.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section*
@@ -659,6 +899,11 @@ Na tabela a seguir são apresentados os resultados obtidos para cada caso
  retorno do resultado, além do retorno sobre a entrada e saída do labirinto
  e a distância (quantidade de nodos percorridos no caminho da entrada até
  o fim do labirinto).
+\end_layout
+
+\begin_layout Standard
+\align center
+
 \end_layout
 
 \begin_layout Standard
@@ -685,7 +930,7 @@ Caso de teste
 \begin_inset Text
 
 \begin_layout Plain Layout
-Entrada do labirinto: c(linha,coluna)
+Entrada: c(linha,coluna)
 \end_layout
 
 \end_inset
@@ -694,7 +939,7 @@ Entrada do labirinto: c(linha,coluna)
 \begin_inset Text
 
 \begin_layout Plain Layout
-Saída do labirinto: c(linha,coluna)
+Saída: c(linha,coluna)
 \end_layout
 
 \end_inset
@@ -712,7 +957,7 @@ Distância
 \begin_inset Text
 
 \begin_layout Plain Layout
-Tempo de execução do algoritmo (milissegundos)
+Tempo (milissegundos)
 \end_layout
 
 \end_inset
@@ -1197,7 +1442,7 @@ c0,381
 
 \begin_layout Standard
 \align center
-Tabela1: Resultados dos casos de teste aplicados ao algoritmo desenvolvido.
+Tabela 1: Resultados dos casos de teste aplicados ao algoritmo desenvolvido.
 \end_layout
 
 \begin_layout Section*
@@ -1216,10 +1461,6 @@ to das informações inerentes à estrutura do labirinto.
  concluído.
 \end_layout
 
-\begin_layout Standard
-[COLOCAR REFERÊNCIAS ATUALIZADAS]
-\end_layout
-
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
@@ -1229,17 +1470,18 @@ literal "false"
 
 \end_inset
 
-Goodrich, Michael T.: 
+Cormen, Thomas H., Leiserson, Charles E., Rivest, Ronald L., Stein, Cliford:
+ 
 \begin_inset Quotes eld
 \end_inset
 
-Estuturas de Dados e algoritmos em Java
+Algoritmos, Teoria e Prática
 \begin_inset Quotes erd
 \end_inset
 
 .
- 5 ed.
- Bookman, 2013, 713 p.
+ 2° ed.
+ Elsevier, 2002, 429 p.
 \end_layout
 
 \end_body
