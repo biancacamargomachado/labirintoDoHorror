@@ -144,10 +144,10 @@ No contexto da disciplina de Algoritmos e Estruturas de Dados II, o enunciado
 
  500.
  E ainda, cada célula do labirinto contém informações sobre suas conexões
- com as células conectdas a ela diretamente (acima, abaixo, à esquerda e
- à direita) e estas informações representavam 4 bits na numeração hexadecimal,
- em que cada bit corresponde à definição de se há parede superior, direita,
- inferior e à esquerda da célula.
+ com as células conectadas a ela diretamente (acima, abaixo, à esquerda
+ e à direita) e estas informações representam 4 bits na numeração hexadecimal,
+ em que cada bit corresponde à definição de existência ou não de parede
+ superior, direita, inferior e à esquerda da célula.
 \end_layout
 
 \begin_layout Standard
@@ -159,6 +159,7 @@ Um exemplo de valor de célula arbitrária do labirinto é E, que em representa�
 
 \begin_layout Standard
 \begin_inset Float figure
+placement H
 wide false
 sideways false
 status open
@@ -195,12 +196,9 @@ Demonstração do significado de cada bit para uma célula do labirinto.
 A partir destas informações sobre o segredo deste labirinto, tem-se como
  objetivo localizar as células de entrada e saída do mesmo, junto com o
  comprimento do caminho percorrido de um ponto ao outro.
-\end_layout
-
-\begin_layout Standard
-Ao observar as informações prestadas no enunciado e os casos de teste disponibil
-izados, podemos chegar a conclusões inerentes à proposta que podem nos auxiliar
- na resolução do problema, são elas:
+ Ao observar as informações prestadas no enunciado e os casos de teste disponibi
+lizados, podemos chegar a conclusões inerentes à proposta que podem nos
+ auxiliar na resolução do problema, são elas:
 \end_layout
 
 \begin_layout Itemize
@@ -220,13 +218,14 @@ As posssíveis saídas e entradas do labirinto localizam-se nas bordas do
 
 \begin_layout Standard
 Para ilustrarmos o problema e trabalharmos na sua resolução, vamos utilizar
- o exemplo de fornecido no enunciado do trabalho, este que contém um modelo
+ o exemplo fornecido no enunciado do trabalho, este que contém um modelo
  de caso de teste, ilustração do labirinto deste caso e os valores dele
  convertidos em binário, como é possível observar na imagem abaixo.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
+placement H
 wide false
 sideways false
 status open
@@ -247,7 +246,9 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Exemplo que será abordado ao decorrer do artigo.
+Exemplo de caso de teste disponibilizado, representação binária do caso
+ de teste e ilustração do labirinto.
+ Este exemplo será abordado ao decorrer do artigo.
 \end_layout
 
 \end_inset
@@ -359,6 +360,7 @@ m
 
 \begin_layout Standard
 \begin_inset Float figure
+placement H
 wide false
 sideways false
 status open
@@ -378,7 +380,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Valores de n,m em para cada célula da matriz.
+Valores de n,m para cada célula da matriz.
 \end_layout
 
 \end_inset
@@ -419,20 +421,8 @@ Devido à necessidade de armazenar na vértice infomações sobre as paredes
 \end_layout
 
 \begin_layout Standard
-Com base nestas informações, considerando que já temos informações suficientes
- para determinar qual é o vértice de entrada e qual é o de saída - a partir
- de sua posição na matriz -, o próximo passo é localizar o caminho de um
- ponto ao outro.
- Mas como fazer isto? Um algoritmo que resolve este problema é o algoritmo
- de busca por profundidade no grafo, já que este precisa de uma entrada
- específica e uma saída e percorre o grafo da seguinte forma: parte de um
- nodo e busca seus adjacentes.
- Vale lembrar que o caminho que precisamos encontrar nada mais é que o conjuntos
- de nodos adjacentes necessário para ir de um ponto ao outro.
-\end_layout
-
-\begin_layout Standard
 \begin_inset Float figure
+placement H
 wide false
 sideways false
 status open
@@ -463,6 +453,19 @@ Cada vértice do grafo referencia um Nodo.
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Com base nestas informações, considerando que já temos informações suficientes
+ para determinar qual é o vértice de entrada e qual é o de saída - a partir
+ de sua posição na matriz -, o próximo passo é localizar o caminho de um
+ ponto ao outro.
+ Mas como fazer isto? Um algoritmo que resolve este problema é o algoritmo
+ de busca por profundidade no grafo, já que este precisa de uma entrada
+ específica e uma saída e percorre o grafo da seguinte forma: parte de um
+ nodo e busca seus adjacentes.
+ Vale lembrar que o caminho que precisamos encontrar nada mais é que o conjuntos
+ de nodos adjacentes necessário para ir de um ponto ao outro.
 \end_layout
 
 \begin_layout Standard
@@ -537,9 +540,10 @@ A imagem a seguir também é relacionada ao labirinto apresentado na introduçã
 
 \begin_layout Standard
 \begin_inset Float figure
+placement H
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -848,6 +852,7 @@ Distância: 15 nodos percorridos.
 \begin_layout Standard
 Na imagem a seguir, encontra-se a ilustração destes resultados.
 \begin_inset Float figure
+placement H
 wide false
 sideways false
 status open
