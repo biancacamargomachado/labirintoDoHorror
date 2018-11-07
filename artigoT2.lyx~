@@ -415,7 +415,7 @@ Como não existe nenhum critério definido para especificar qual é a entrada
 \begin_layout Standard
 Devido à necessidade de armazenar no vértice informações sobre as paredes
  do mesmo, cabe considerar que cada vértice do grafo deve direcionar para
- tais informações e portanto, será considerada a seguinte estrutura:
+ tais informações e, portanto, será considerada a seguinte estrutura:
 \end_layout
 
 \begin_layout Standard
@@ -440,7 +440,8 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Cada vértice do grafo referencia um Nodo.
+Cada célula da matriz referencia um objeto Nodo e cada vértice do grafo
+ referencia um Nodo.
 \end_layout
 
 \end_inset

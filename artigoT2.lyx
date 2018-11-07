@@ -440,7 +440,8 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Cada vértice do grafo referencia um Nodo.
+Cada célula da matriz referencia um objeto Nodo e cada vértice do grafo
+ representa um Nodo.
 \end_layout
 
 \end_inset
