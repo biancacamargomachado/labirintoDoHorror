@@ -401,9 +401,8 @@ Análise do problema
 Ao analisarmos o labirinto (Figura 3) em uma estrutura de grafos podemos
  observar que cada célula do labirinto corresponde a um vértice do grafo
  a ligação entre estes vértices depende dos valores armazenas no mesmo.
- Portanto, assim teríamos uma grafo não direcionado - pois o caminho que
- se faz de um vértice ao outro pode servir tanto para de ida quanto para
- volta.
+ Portanto, assim teríamos um grafo não direcionado - pois o caminho que
+ se faz de um vértice ao outro pode servir tanto para ida quanto para volta.
 \end_layout
 
 \begin_layout Standard
@@ -415,7 +414,7 @@ Como não existe nenhum critério definido para especificar qual é a entrada
 \end_layout
 
 \begin_layout Standard
-Devido à necessidade de armazenar na vértice infomações sobre as paredes
+Devido à necessidade de armazenar no vértice informações sobre as paredes
  do mesmo, cabe considerar que cada vértice do grafo deve direcionar para
  tais informações e portanto, será considerada a seguinte estrtutura:
 \end_layout
@@ -461,10 +460,10 @@ Com base nestas informações, considerando que já temos informações suficien
  de sua posição na matriz -, o próximo passo é localizar o caminho de um
  ponto ao outro.
  Mas como fazer isto? Um algoritmo que resolve este problema é o algoritmo
- de busca por profundidade no grafo, já que este precisa de uma entrada
- específica e uma saída e percorre o grafo da seguinte forma: parte de um
- nodo e busca seus adjacentes.
- Vale lembrar que o caminho que precisamos encontrar nada mais é que o conjuntos
+ de busca por profundidade no grafo, que recebe uma entrada específica e
+ uma saída para percorrer o grafo da seguinte forma: parte de um nodo e
+ busca seus adjacentes.
+ Vale lembrar que o caminho que precisamos encontrar nada mais é que o conjunto
  de nodos adjacentes necessário para ir de um ponto ao outro.
 \end_layout
 
@@ -575,8 +574,8 @@ Imagem dos bits armazenado em cada nodo da matriz.
 \end_layout
 
 \begin_layout Standard
-O algoritmo a seguir localiza a entrada e saída do labirinto e armazena
- as coordenadas x e y destas em uma lista chamada 
+O algoritmo a seguir localiza a entrada e saída do labirinto (Figura 2,
+ 3 e 4) e armazena as coordenadas x e y destas em uma lista chamada 
 \series bold
 pontos
 \series default
